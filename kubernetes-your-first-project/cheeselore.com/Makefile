@@ -1,4 +1,5 @@
-.PHONY: run_website stop_website install_kind install_kubectl create_cluster
+.PHONY: run_website stop_website install_kind install_kubectl \ 
+	create_kind_cluster
 
 run_website: 
 	docker build -t cheeselore.com:1.0 . && \
@@ -8,15 +9,17 @@ stop_website:
 	docker stop cheeselore.com
 
 install_kubectl:
-	curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
+	curl --location --output ./kubectl "https://dl.k8s.io/release/v1.30.0/bin/linux/amd64/kubectl" && \
 		chmod +x kubectl && \
-		mv kubectl /usr/local/bin/kubectl && \
+		sudo mv kubectl /usr/local/bin/kubectl && \
 		kubectl version --client
 
 install_kind: 
 	curl --location --output ./kind https://github.com/kubernetes-sigs/kind/releases/download/v0.22.0/kind-linux-amd64 && \
 		chmod +x ./kind && \
-		./kind --version
+		sudo mv ./kind /usr/local/bin/kind && \
+		kind --version
 
-create_cluster: install_kind
-	./kind create cluster --name cheeselore.com
+create_kind_cluster: install_kind install_kubectl
+	kind create cluster --name cheeselore.com && \
+		kubectl get nodes --namespace kube-system
