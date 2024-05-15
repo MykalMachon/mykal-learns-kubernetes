@@ -1,5 +1,6 @@
 .PHONY: run_website stop_website install_kind install_kubectl \ 
-	create_kind_cluster create_docker_registry
+	create_kind_cluster create_docker_registry connect_registry_to_kind_network \
+	connect_registry_to_kind	create_kind_cluster_with_registry
 
 run_website: 
 	docker build -t cheeselore.com:1.0 . && \
@@ -34,6 +35,15 @@ create_docker_registry:
 	curl -L http://localhost:5000/v2
 
 create_kind_cluster: install_kind install_kubectl create_docker_registry
-	kind create cluster --name cheeselore.com && \
+	kind create cluster --name cheeselore.com --config ./kind_config.yml || true && \
 		kubectl get nodes --namespace kube-system
 
+connect_registry_to_kind_network: 
+	docker network connect kind local-registry || true
+
+connect_registry_to_kind: connect_registry_to_kind_network 
+	kubectl apply -f ./kind_configmap.yml
+
+create_kind_cluster_with_registry:
+	$(MAKE) create_kind_cluster && $(MAKE) connect_registry_to_kind
+	
