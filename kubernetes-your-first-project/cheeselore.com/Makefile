@@ -1,6 +1,7 @@
 .PHONY: run_website stop_website install_kind install_kubectl \ 
 	create_kind_cluster create_docker_registry connect_registry_to_kind_network \
-	connect_registry_to_kind	create_kind_cluster_with_registry
+	connect_registry_to_kind create_kind_cluster_with_registry \ 
+	delete_kind_cluster delete_registry delete_kind_cluster_with_regitry
 
 run_website: 
 	docker build -t cheeselore.com:1.0 . && \
@@ -46,4 +47,13 @@ connect_registry_to_kind: connect_registry_to_kind_network
 
 create_kind_cluster_with_registry:
 	$(MAKE) create_kind_cluster && $(MAKE) connect_registry_to_kind
+
+delete_kind_cluster:
+	kind delete cluster --name cheeselore.com
+
+delete_registry:
+	docker stop local-registry && docker rm local-registry 
+
+delete_kind_cluster_with_regitry:
+	$(MAKE) delete_kind_cluster && $(MAKE) delete_registry
 	

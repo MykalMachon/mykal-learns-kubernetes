@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: cheeselore.com
+
+  name: cheeselore.com
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cheeselore.com
+  strategy: {} # can do rolling updates in here (rolling updates, 1 replicat at a time)
+  template:
+    metadata:
+      labels:
+        app: cheeselore.com
+    spec:
+      containers:
+      - image: localhost:5000/cheeselore.com
+        name: cheeselore-com-site
+        resources: {}
+status: {}
