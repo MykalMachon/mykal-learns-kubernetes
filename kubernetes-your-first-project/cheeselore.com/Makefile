@@ -57,3 +57,15 @@ delete_registry:
 delete_kind_cluster_with_regitry:
 	$(MAKE) delete_kind_cluster && $(MAKE) delete_registry
 	
+push_image_to_registry:
+	docker tag cheeselore.com localhost:5000/cheeselore.com && \
+		docker push localhost:5000/cheeselore.com
+
+deploy_website_to_kind: push_image_to_registry
+	kubectl apply -f ./deployment.yml 
+
+port_forward_website:
+	kubectl port-forward service/cheeselore-svc 8080:80
+
+delete_website_from_kind:
+	kubectl delete -f ./deployment.yml

@@ -10,10 +10,10 @@ nodes:
   - |
     kind: InitConfiguration
     nodeRegistration:
-      kubeletExtraArgs:
+      kubeletExtraArgs: # this lets us use ingress controllers :)
         node-labels: "ingress-ready=true"
   extraPortMappings:
-  - containerPort: 80
+  - containerPort: 8080
     hostPort: 80
     protocol: TCP
   - containerPort: 443
