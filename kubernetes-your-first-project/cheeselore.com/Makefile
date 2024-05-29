@@ -62,10 +62,22 @@ push_image_to_registry:
 		docker push localhost:5000/cheeselore.com
 
 deploy_website_to_kind: push_image_to_registry
-	kubectl apply -f ./deployment.yml 
+	kubectl apply -f ./_deployment.yml 
+
+deploy_service_to_kind:
+	kubectl apply -f ./_service.yml
+
+deploy_ingress_to_kind:
+	kubectl apply -f ./_ingress.yml
 
 port_forward_website:
-	kubectl port-forward service/cheeselore-svc 8080:80
+	kubectl port-forward service/cheeslore-website-svc 8080:80
 
 delete_website_from_kind:
-	kubectl delete -f ./deployment.yml
+	kubectl delete -f ./_deployment.yml
+	
+install_app_with_helm: 
+	helm upgrade --atomic --install cheeselore-website ./chart
+
+delete_app_with_helm:
+	helm delete cheeselore-website

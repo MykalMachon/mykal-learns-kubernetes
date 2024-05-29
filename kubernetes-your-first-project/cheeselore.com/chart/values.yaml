@@ -1,0 +1,13 @@
+# Generics
+appName: cheeselore-website
+appHost: cheeselore.com
+
+# Deployment
+imageName: localhost:5000/cheeselore.com
+replicas: 1
+
+# Service
+serviceName: cheeslore-website-svc
+sourcePort: 80
+
+# Ingress (n/a)
